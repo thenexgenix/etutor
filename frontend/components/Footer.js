@@ -28,7 +28,7 @@ function CustomSelect({ items, defaultValue, className = "" }) {
         />
       </div>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown */}
       {open && (
         <div className="absolute bottom-full left-0 mb-1 bg-white rounded shadow-lg z-50 border border-gray-100 min-w-[120px]">
           {items.map((item) => (
