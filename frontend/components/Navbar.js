@@ -11,15 +11,54 @@ import {
   Menu,
   X,
 } from "lucide-react";
+function CustomSelect({ items, defaultValue, className = "" }) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(defaultValue);
+
+  return (
+    <div className={`relative group ${className}`}>
+      {/* Selected Value */}
+      <div
+        onClick={() => setOpen(!open)}
+        className="appearance-none bg-transparent border-none text-gray-300 text-sm pr-6 cursor-pointer group-hover:text-white flex items-center"
+      >
+        {value}
+
+        <ChevronDown
+          size={14}
+          className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300 group-hover:text-white"
+        />
+      </div>
+
+      {/* Dropdown Menu */}
+      {open && (
+        <div className="absolute left-0 w-full mt-1 bg-white rounded shadow-lg z-50">
+          {items.map((item) => (
+            <div
+              key={item.value}
+              onClick={() => {
+                setValue(item.label);
+                setOpen(false);
+              }}
+              className="px-2 py-1 text-sm text-gray-800 hover:bg-orange-500 hover:text-white cursor-pointer"
+            >
+              {item.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="w-full flex flex-col font-sans relative z-50">
-      {/*DESKTOP HEADER  */}
+      {/* DESKTOP HEADER */}
       <div className="hidden lg:block">
-        {/*Top Bar*/}
+        {/* Top Bar */}
         <div className="bg-[#1D2026] text-gray-300 text-sm border-b border-gray-800">
           <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-12">
             {/* Left Navigation Links */}
@@ -41,41 +80,30 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Right Selectors */}
+            {/* Right Dropdowns */}
             <div className="flex gap-4 items-center">
-              <div className="relative group">
-                <select className="appearance-none bg-transparent border-none text-gray-300 text-sm pr-4 focus:outline-none cursor-pointer group-hover:text-white">
-                  <option className="text-black" value="USD">
-                    USD
-                  </option>
-                  <option className="text-black" value="EUR">
-                    EUR
-                  </option>
-                </select>
-                <ChevronDown
-                  size={14}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
-                />
-              </div>
-              <div className="relative group">
-                <select className="appearance-none bg-transparent border-none text-gray-300 text-sm pr-4 focus:outline-none cursor-pointer group-hover:text-white">
-                  <option className="text-black" value="en">
-                    English
-                  </option>
-                  <option className="text-black" value="fr">
-                    French
-                  </option>
-                </select>
-                <ChevronDown
-                  size={14}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
-                />
-              </div>
+              {/* Currency */}
+              <CustomSelect
+                defaultValue="USD"
+                items={[
+                  { label: "USD", value: "USD" },
+                  { label: "EUR", value: "EUR" },
+                ]}
+              />
+
+              {/* Language */}
+              <CustomSelect
+                defaultValue="English"
+                items={[
+                  { label: "English", value: "en" },
+                  { label: "French", value: "fr" },
+                ]}
+              />
             </div>
           </div>
         </div>
 
-        {/*Main Header*/}
+        {/* Main Header */}
         <header className="w-full bg-white shadow-sm py-4">
           <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-8">
             {/* Logo */}
@@ -93,18 +121,20 @@ export default function Navbar() {
 
             {/* Search Bar */}
             <div className="flex-1 max-w-2xl">
-              <div className="flex border border-gray-200 rounded-md overflow-hidden items-center bg-gray-50 h-11">
-                <div className="relative border-r border-gray-200 h-full hidden md:block">
-                  <select className="appearance-none h-full bg-transparent pl-4 pr-8 text-gray-600 text-sm font-medium focus:outline-none cursor-pointer hover:bg-gray-100 transition">
-                    <option value="">Browse</option>
-                    <option value="dev">Development</option>
-                    <option value="des">Design</option>
-                  </select>
-                  <ChevronDown
-                    size={16}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500"
+              <div className="flex border border-gray-200 rounded-md text-black items-center bg-white h-11 overflow-visible">
+                <div className="text-black relative hidden md:flex items-center h-full border-r border-gray-200">
+                  <CustomSelect
+                    defaultValue="Browse"
+                    className="pl-4 pr-8 text-sm font-medium text-black cursor-pointer w-full"
+                    items={[
+                      { label: "Development", value: "dev" },
+                      { label: "Design", value: "des" },
+                      { label: "Marketing", value: "mkt" },
+                    ]}
                   />
                 </div>
+
+                {/* Search Input */}
                 <div className="relative flex-1 bg-white h-full">
                   <Search
                     className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -126,13 +156,11 @@ export default function Navbar() {
                 <span className="absolute top-0 right-0 w-2 h-2 bg-[#FF6636] rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
               </div>
 
-              {/* Heart Icon */}
               <Heart
                 size={24}
                 className="hover:text-[#FF6636] cursor-pointer transition"
               />
 
-              {/* Cart Icon */}
               <div className="relative hover:text-[#FF6636] cursor-pointer transition">
                 <ShoppingCart size={24} />
                 <span className="absolute -top-2 -right-2 bg-[#FF6636] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
@@ -140,7 +168,7 @@ export default function Navbar() {
                 </span>
               </div>
 
-              {/*Avatar*/}
+              {/* Avatar */}
               <div className="ml-2">
                 <div className="w-10 h-10 rounded-full bg-gray-200 border border-gray-300 overflow-hidden">
                   <Image
@@ -149,10 +177,6 @@ export default function Navbar() {
                     width={40}
                     height={40}
                     className="object-cover w-full h-full"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                      e.target.nextSibling.style.display = "flex";
-                    }}
                   />
                 </div>
               </div>
@@ -161,7 +185,7 @@ export default function Navbar() {
         </header>
       </div>
 
-      {/*MOBILE HEADER*/}
+      {/* MOBILE HEADER */}
       <div className="lg:hidden bg-white shadow-sm py-3 px-4 flex justify-between items-center sticky top-0 z-40">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -176,7 +200,7 @@ export default function Navbar() {
           <span className="text-xl font-bold text-[#1D2026]">E-tutor</span>
         </Link>
 
-        {/* Hamburger Button */}
+        {/* Mobile Menu Btn */}
         <button
           onClick={() => setIsMobileMenuOpen(true)}
           className="text-gray-700 hover:text-[#FF6636]"
@@ -185,9 +209,9 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/*MOBILE MENU OVERLAY*/}
+      {/* MOBILE MENU */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden text-black">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/50"
@@ -197,7 +221,7 @@ export default function Navbar() {
           {/* Sidebar */}
           <div className="absolute top-0 right-0 w-[80%] max-w-sm h-full bg-white shadow-xl p-5 flex flex-col gap-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold text-lg text-gray-800">Menu</span>
+              <span className="font-bold text-lg text-gray-800">E-Tutor</span>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-gray-500 hover:text-red-500"
@@ -219,7 +243,7 @@ export default function Navbar() {
               />
             </div>
 
-            {/* Mobile Links */}
+            {/* Links */}
             <nav className="flex flex-col gap-4">
               {[
                 "Home",
@@ -239,16 +263,25 @@ export default function Navbar() {
               ))}
             </nav>
 
-            {/* Mobile*/}
-            <div className="flex flex-col gap-4 mt-auto border-t border-gray-100 pt-4">
-              <select className="w-full p-2 border border-gray-200 rounded bg-white text-gray-600">
-                <option>English</option>
-                <option>French</option>
-              </select>
-              <select className="w-full p-2 border border-gray-200 rounded bg-white text-gray-600">
-                <option>USD</option>
-                <option>EUR</option>
-              </select>
+            {/* Mobile Selects */}
+            <div className="text-black flex flex-col gap-4 mt-auto border-t border-gray-100 pt-4">
+              <CustomSelect
+                defaultValue="English"
+                items={[
+                  { label: "English", value: "en" },
+                  { label: "French", value: "fr" },
+                ]}
+                className="text-black w-full border border-gray-200 p-2 rounded bg-white"
+              />
+
+              <CustomSelect
+                defaultValue="USD"
+                items={[
+                  { label: "USD", value: "USD" },
+                  { label: "EUR", value: "EUR" },
+                ]}
+                className="text-black w-full border border-gray-200 p-2 rounded bg-white"
+              />
             </div>
           </div>
         </div>

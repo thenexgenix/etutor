@@ -1,5 +1,5 @@
-﻿import React from "react";
-import Image from "next/image";
+﻿"use client";
+import React, { useState } from "react";
 import {
   ChevronDown,
   Facebook,
@@ -7,14 +7,54 @@ import {
   Twitter,
   Youtube,
   ChevronRight,
-  Instagram, 
+  Instagram,
 } from "lucide-react";
 import Link from "next/link";
+import Image from 'next/image'
+function CustomSelect({ items, defaultValue, className = "" }) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(defaultValue);
 
+  return (
+    <div className={`relative group ${className}`}>
+      <div
+        onClick={() => setOpen(!open)}
+        className="appearance-none bg-transparent border-none text-sm pr-6 cursor-pointer flex items-center h-full select-none"
+      >
+        {value}
+        <ChevronDown
+          size={16}
+          className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
+        />
+      </div>
+
+      {/* Dropdown Menu */}
+      {open && (
+        <div className="absolute bottom-full left-0 mb-1 bg-white rounded shadow-lg z-50 border border-gray-100 min-w-[120px]">
+          {items.map((item) => (
+            <div
+              key={item.value}
+              onClick={() => {
+                setValue(item.label);
+                setOpen(false);
+              }}
+              className="px-4 py-2 text-sm text-gray-800 hover:bg-[#FF6636] hover:text-white cursor-pointer transition-colors"
+            >
+              {item.label}
+            </div>
+          ))}
+        </div>
+      )}
+      {open && (
+        <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+      )}
+    </div>
+  );
+}
 export default function Footer() {
   return (
     <div className="w-full bg-[#1D2026] text-gray-400 font-sans">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-center xl:text-justify">
           <div className="lg:col-span-3 flex flex-col gap-5 text-center xl:text-justify">
             <Link href="/" className="flex items-center gap-2 mx-auto xl:mx-0">
@@ -23,6 +63,7 @@ export default function Footer() {
                 width={40}
                 height={40}
                 alt="Graduation Cap"
+                className="h-10 w-10 object-contain"
               />
               <span className="text-2xl font-bold text-white mx-auto xl:mx-0">
                 E-tutor
@@ -33,36 +74,36 @@ export default function Footer() {
               curabitur, egestas sodales leo sed.
             </p>
             <div className="flex gap-3 mt-2 mx-auto xl:mx-0">
-              <Link
+              <a
                 href="#"
                 className="w-9 h-9 bg-gray-700 rounded-md flex items-center justify-center hover:bg-[#FF6636] transition-colors"
               >
                 <Facebook size={16} className="text-white" />
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="w-9 h-9 bg-gray-700 rounded-md flex items-center justify-center hover:bg-[#FF6636] transition-colors"
               >
                 <Instagram size={16} className="text-white" />
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
-                className="w-9 h-9 bg-gray-700 rounded-md flex items-center justify-center hover:bg-orange-600 transition-colors"
+                className="w-9 h-9 bg-gray-700 rounded-md flex items-center justify-center hover:bg-[#FF6636] transition-colors"
               >
                 <Linkedin size={16} className="text-white" />
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="w-9 h-9 bg-gray-700 rounded-md flex items-center justify-center hover:bg-[#FF6636] transition-colors"
               >
                 <Twitter size={16} className="text-white" />
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="w-9 h-9 bg-gray-700 rounded-md flex items-center justify-center hover:bg-[#FF6636] transition-colors"
               >
                 <Youtube size={16} className="text-white" />
-              </Link>
+              </a>
             </div>
           </div>
           <div className="lg:col-span-2 text-center xl:text-justify">
@@ -70,30 +111,30 @@ export default function Footer() {
               Top 4 Category
             </h3>
             <div className="flex flex-col gap-3 text-sm">
-              <Link
+              <a
                 href="#"
                 className="hover:text-white transition-colors hover:border-b-2 hover:border-b-[#FF6636]"
               >
                 Development
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="hover:text-white transition-colors hover:border-b-2 hover:border-b-[#FF6636]"
               >
                 Finance & Accounting
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="hover:text-white transition-colors hover:border-b-2 hover:border-b-[#FF6636]"
               >
                 Design
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="hover:text-white transition-colors hover:border-b-2 hover:border-b-[#FF6636]"
               >
                 Business
-              </Link>
+              </a>
             </div>
           </div>
           <div className="lg:col-span-2 text-center xl:text-justify">
@@ -101,31 +142,31 @@ export default function Footer() {
               Quick Links
             </h3>
             <div className="flex flex-col gap-3 text-sm">
-              <Link
+              <a
                 href="#"
                 className="hover:border-b-2 hover:border-b-[#FF6636] hover:text-white transition-colors"
               >
                 About
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="mx-auto xl:mx-0 hover:border-b-2 hover:border-b-[#FF6636] flex items-center gap-1 text-white hover:text-white transition-colors"
               >
                 Become Instructor
                 <ChevronRight size={14} />
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className=" hover:border-b-2 hover:border-b-[#FF6636] hover:text-white transition-colors"
               >
                 Contact
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="hover:border-b-2 hover:border-b-[#FF6636] hover:text-white transition-colors"
               >
                 Career
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -135,30 +176,30 @@ export default function Footer() {
               Support
             </h3>
             <div className="flex flex-col gap-3 text-sm">
-              <Link
+              <a
                 href="#"
                 className="hover:border-b-2 hover:border-b-[#FF6636] hover:text-white transition-colors"
               >
                 Help Center
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="hover:text-white transition-colors hover:border-b-2 hover:border-b-[#FF6636]"
               >
                 FAQs
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="hover:text-white transition-colors hover:border-b-2 hover:border-b-[#FF6636]"
               >
                 Terms & Conditions
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="hover:text-white transition-colors hover:border-b-2 hover:border-b-[#FF6636]"
               >
                 Privacy Policy
-              </Link>
+              </a>
             </div>
           </div>
           <div className="lg:col-span-3 text-center xl:text-justify">
@@ -166,7 +207,7 @@ export default function Footer() {
               Download Our App
             </h3>
             <div className="flex flex-col gap-4">
-              <Link
+              <a
                 href="#"
                 className="bg-[#363b4766] rounded-lg p-3 justify-center flex items-center gap-3 hover:bg-gray-600 transition-colors"
               >
@@ -175,6 +216,7 @@ export default function Footer() {
                   width={32}
                   height={32}
                   alt="playstore"
+                  className="h-8 w-8 object-contain"
                 />
                 <div>
                   <span className="text-xs block">Download on the</span>
@@ -182,8 +224,8 @@ export default function Footer() {
                     App Store
                   </span>
                 </div>
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="bg-[#363b4766] rounded-lg justify-center p-3 flex items-center gap-3 hover:bg-gray-600 transition-colors"
               >
@@ -192,6 +234,7 @@ export default function Footer() {
                   width={32}
                   height={32}
                   alt="playstore"
+                  className="h-8 w-8 object-contain"
                 />
                 <div>
                   <span className="text-xs block">Download on the</span>
@@ -199,40 +242,31 @@ export default function Footer() {
                     Play Store
                   </span>
                 </div>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
       </div>
 
       {/*Sub-Footer*/}
-      <div className="border-t border-gray-700 mx-auto xl:mx-0">
+      <div className="border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-center md:text-left">
             © 2021 E-tutor. Designed by{" "}
             <span className="text-white">TemplaCookie</span>. All rights
             reserved
           </p>
-          <div className="relative group">
-            <select className="appearance-none bg-transparent border-none text-gray-400 text-sm pr-6 focus:outline-none cursor-pointer group-hover:text-white">
-              <option className="text-black" value="en">
-                English
-              </option>
-              <option className="text-black" value="fr">
-                French
-              </option>
-              <option className="text-black" value="es">
-                Spanish
-              </option>
-            </select>
-            <ChevronDown
-              size={16}
-              className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none group-hover:text-white"
-            />
-          </div>
+          <CustomSelect
+            defaultValue="English"
+            className="text-gray-400 group-hover:text-white"
+            items={[
+              { label: "English", value: "en" },
+              { label: "French", value: "fr" },
+              { label: "Spanish", value: "es" },
+            ]}
+          />
         </div>
       </div>
     </div>
   );
 }
-
