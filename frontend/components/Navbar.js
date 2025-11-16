@@ -1,14 +1,291 @@
-﻿export default function Navbar() {
+﻿"use client";
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Search,
+  Bell,
+  Heart,
+  ShoppingCart,
+  ChevronDown,
+  Menu,
+  X,
+} from "lucide-react";
+function CustomSelect({ items, defaultValue, className = "" }) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(defaultValue);
+
   return (
-    <header className="border-b">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <a href="/" className="text-xl font-bold">e-Tutor</a>
-        <nav className="flex items-center gap-4 text-sm">
-          <a href="/courses" className="hover:underline">Courses</a>
-          <a href="/category" className="hover:underline">Categories</a>
-          <a href="/auth/signin" className="rounded-md border px-3 py-1.5 hover:bg-gray-50">Sign in</a>
-        </nav>
+    <div className={`relative group ${className}`}>
+      {/* Selected Value */}
+      <div
+        onClick={() => setOpen(!open)}
+        className="appearance-none bg-transparent border-none text-gray-300 text-sm pr-6 cursor-pointer group-hover:text-white flex items-center"
+      >
+        {value}
+
+        <ChevronDown
+          size={14}
+          className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300 group-hover:text-white"
+        />
       </div>
-    </header>
+
+      {/* Dropdown Menu */}
+      {open && (
+        <div className="absolute left-0 w-full mt-1 bg-white rounded shadow-lg z-50">
+          {items.map((item) => (
+            <div
+              key={item.value}
+              onClick={() => {
+                setValue(item.label);
+                setOpen(false);
+              }}
+              className="px-2 py-1 text-sm text-gray-800 hover:bg-orange-500 hover:text-white cursor-pointer"
+            >
+              {item.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  return (
+    <div className="w-full flex flex-col font-sans relative z-50">
+      {/* DESKTOP HEADER */}
+      <div className="hidden lg:block">
+        {/* Top Bar */}
+        <div className="bg-[#1D2026] text-gray-300 text-sm border-b border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-12">
+            {/* Left Navigation Links */}
+            <div className="flex gap-6 h-full">
+              {[
+                "Home",
+                "Courses",
+                "About",
+                "Contact",
+                "Become an Instructor",
+              ].map((item) => (
+                <Link
+                  key={item}
+                  href={`/${item.toLowerCase().replace(/ /g, "-")}`}
+                  className="h-full flex items-center border-t-2 border-transparent hover:border-[#FF6636] hover:text-white transition-all duration-200"
+                >
+                  {item}
+                </Link>
+              ))}
+            </div>
+
+            {/* Right Dropdowns */}
+            <div className="flex gap-4 items-center">
+              {/* Currency */}
+              <CustomSelect
+                defaultValue="USD"
+                items={[
+                  { label: "USD", value: "USD" },
+                  { label: "EUR", value: "EUR" },
+                ]}
+              />
+
+              {/* Language */}
+              <CustomSelect
+                defaultValue="English"
+                items={[
+                  { label: "English", value: "en" },
+                  { label: "French", value: "fr" },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Main Header */}
+        <header className="w-full bg-white shadow-sm py-4">
+          <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-8">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Image
+                  src="/navbar/GraduationCap.png"
+                  width={40}
+                  height={40}
+                  alt="Graduation Cap"
+                />
+              </div>
+              <span className="text-2xl font-bold text-[#1D2026]">E-tutor</span>
+            </Link>
+
+            {/* Search Bar */}
+            <div className="flex-1 max-w-2xl">
+              <div className="flex border border-gray-200 rounded-md text-black items-center bg-white h-11 overflow-visible">
+                <div className="text-black relative hidden md:flex items-center h-full border-r border-gray-200">
+                  <CustomSelect
+                    defaultValue="Browse"
+                    className="pl-4 pr-8 text-sm font-medium text-black cursor-pointer w-full"
+                    items={[
+                      { label: "Development", value: "dev" },
+                      { label: "Design", value: "des" },
+                      { label: "Marketing", value: "mkt" },
+                    ]}
+                  />
+                </div>
+
+                {/* Search Input */}
+                <div className="relative flex-1 bg-white h-full">
+                  <Search
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={20}
+                  />
+                  <input
+                    type="text"
+                    placeholder="What do you want learn..."
+                    className="w-full h-full pl-10 pr-4 outline-none text-sm text-gray-700 placeholder-gray-400"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Icons */}
+            <div className="flex items-center gap-5 text-gray-600">
+              <div className="relative hover:text-[#FF6636] cursor-pointer transition">
+                <Bell size={24} />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-[#FF6636] rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
+              </div>
+
+              <Heart
+                size={24}
+                className="hover:text-[#FF6636] cursor-pointer transition"
+              />
+
+              <div className="relative hover:text-[#FF6636] cursor-pointer transition">
+                <ShoppingCart size={24} />
+                <span className="absolute -top-2 -right-2 bg-[#FF6636] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                  2
+                </span>
+              </div>
+
+              {/* Avatar */}
+              <div className="ml-2">
+                <div className="w-10 h-10 rounded-full bg-gray-200 border border-gray-300 overflow-hidden">
+                  <Image
+                    src="/navbar/Avatar.png"
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      {/* MOBILE HEADER */}
+      <div className="lg:hidden bg-white shadow-sm py-3 px-4 flex justify-between items-center sticky top-0 z-40">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-7 h-7 flex items-center justify-center">
+            <Image
+              src="/navbar/GraduationCap.png"
+              width={40}
+              height={40}
+              alt="Graduation Cap"
+            />
+          </div>
+          <span className="text-xl font-bold text-[#1D2026]">E-tutor</span>
+        </Link>
+
+        {/* Mobile Menu Btn */}
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="text-gray-700 hover:text-[#FF6636]"
+        >
+          <Menu size={28} />
+        </button>
+      </div>
+
+      {/* MOBILE MENU */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden text-black">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsMobileMenuOpen(false)}
+          ></div>
+
+          {/* Sidebar */}
+          <div className="absolute top-0 right-0 w-[80%] max-w-sm h-full bg-white shadow-xl p-5 flex flex-col gap-6">
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-lg text-gray-800">E-Tutor</span>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-gray-500 hover:text-red-500"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Mobile Search */}
+            <div className="relative w-full">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <input
+                type="text"
+                placeholder="Search courses..."
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none text-sm"
+              />
+            </div>
+
+            {/* Links */}
+            <nav className="flex flex-col gap-4">
+              {[
+                "Home",
+                "Courses",
+                "About",
+                "Contact",
+                "Become an Instructor",
+              ].map((item) => (
+                <Link
+                  key={item}
+                  href={`/${item.toLowerCase().replace(/ /g, "-")}`}
+                  className="text-gray-700 font-medium hover:text-[#FF6636] border-b border-gray-100 pb-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Mobile Selects */}
+            <div className="text-black flex flex-col gap-4 mt-auto border-t border-gray-100 pt-4">
+              <CustomSelect
+                defaultValue="English"
+                items={[
+                  { label: "English", value: "en" },
+                  { label: "French", value: "fr" },
+                ]}
+                className="text-black w-full border border-gray-200 p-2 rounded bg-white"
+              />
+
+              <CustomSelect
+                defaultValue="USD"
+                items={[
+                  { label: "USD", value: "USD" },
+                  { label: "EUR", value: "EUR" },
+                ]}
+                className="text-black w-full border border-gray-200 p-2 rounded bg-white"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
